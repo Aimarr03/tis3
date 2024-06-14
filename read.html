@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Data</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        #products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 20px;
+            padding: 20px;
+        }
+        .product {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 20px;
+            text-align: center;
+        }
+        .product h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #007BFF;
+        }
+        .product p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Daftar Produk</h1>
+    </header>
+    <div id="products"></div>
+
+    <script>
+        async function fetchProducts() {
+            try {
+                const response = await fetch('/read.html');
+                const data = await response.json();
+                const products = data.products;
+                
+                const productsDiv = document.getElementById('products');
+                products.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.classList.add('product');
+
+                    // Check if product has image, if yes, display it
+                    if (product.image) {
+                        const productImg = document.createElement('img');
+                        productImg.src = product.image;
+                        productDiv.appendChild(productImg);
+                    }
+
+                    const productInfoDiv = document.createElement('div');
+                    productInfoDiv.classList.add('product-info');
+                    productInfoDiv.innerHTML = `
+                        <h3>${product.nama}</h3>
+                        <p>Harga: ${product.harga}</p>
+                        <p>Stok: ${product.stok}</p>
+                        <p>Kategori: ${product.kategori}</p>
+                    `;
+                    productDiv.appendChild(productInfoDiv);
+
+                    productsDiv.appendChild(productDiv);
+                });
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        fetchProducts();
+    </script>
+    
+</body>
+</html>
